@@ -1,56 +1,63 @@
 import React from 'react'
+import Course from './components/Course'
+import Header from './components/Header'
+import Total from './components/Total'
 
-const Header = (props) => {
-  console.log(props)
-  return (
-    <h1>{props.name}</h1>
-  )
-}
-
-const Content = (props) => {
-  return (
-    <div>
-      <Part name={props.name[0]['name']} number={props.name[0]['exercises']}/>
-      <Part name={props.name[1]['name']} number={props.name[1]['exercises']}/>
-      <Part name={props.name[2]['name']} number={props.name[2]['exercises']}/>
-    </div>
-  )
-}
-
-const Part = (props) => {
-  return (
-    <p>{props.name} {props.number}</p>
-  )
-}
-
-const Total = (props) => {
-  return (
-    <p>Number of exercises {props.number[0]['exercises'] + props.number[1]['exercises'] + props.number[2]['exercises']}</p>
-  )
-}
 
 const App = () => {
 
-  const course = { 
-    name :'Half Stack application development',
-    part : [ {
-      name : 'Fundamentals of React',
-      exercises: 10
-    },
+  const courses = [
     {
-      name : 'Using props to pass data',
-      exercises: 7
-    },
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
     {
-      name : 'State of component',
-      exercises: 14
-    }]
-  }  
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
   return (
     <div>
-      <Header name={course['name']} />
-      <Content name={course['part']}/>
-      <Total number={course['part']}/>
+      <Header name={courses[0].name} />
+      {courses[0]['parts'].map(course => <Course name={course.name} number={course.exercises} key={course.id}/>)}
+      <Total arr={courses[0]['parts'].map(course => course['exercises'])} />
+      <Header name={courses[1].name} />
+      {courses[1]['parts'].map(course => <Course name={course.name} number={course.exercises} key={course.id}/>)}
+      <Total arr={courses[1]['parts'].map(course => course['exercises'])} />
     </div>
   )
 }
