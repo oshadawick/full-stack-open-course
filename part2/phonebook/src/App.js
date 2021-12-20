@@ -4,6 +4,7 @@ import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import directry from './services/directry'
+import Notification from './components/Notification'
 
 
 
@@ -13,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filteredName, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageType, setmessageType] = useState(null)
 
 
   useEffect((() => {
@@ -46,16 +49,27 @@ const App = () => {
       name : newName,
       number: newNumber,
       id: persons[persons.length - 1]['id'] + 1
-    }
+      }
 
       directry
         .create(personObject)
+        .then((data) => {
+          setMessage(`Added ${data['data']['name']}`)
+          setmessageType('addMessage')
+          console.log(message)
+          setTimeout(() => {
+            setMessage(null)
+            setmessageType(null)
+          }, 5000)
+        })
 
       setPersons(persons.concat(personObject))
     }
+
     setNewName('')
     setNewNumber('')
   }
+
 
   const removePerson = (id) => {
     const obj = persons.find(person => person['number'].toString() === id)
@@ -68,6 +82,14 @@ const App = () => {
           .then(response => {
             setPersons(response.data)
           })
+        })
+        .catch(error => {
+          setMessage(`Information of ${obj['name']} has already been removed from server`)
+          setmessageType('removeMessage')
+          setTimeout(() => {
+            setMessage(null)
+            setmessageType(null)
+          }, 5000)
         })
     }
     
@@ -90,10 +112,11 @@ const App = () => {
     return (persons.filter(person => (person.name.toLowerCase().indexOf(filteredName.toLowerCase())) > -1)) 
   } 
 
-
+  
   return (  
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} messageType={messageType}/>
       <Filter value={filteredName} change={handleFilter} />
       <h2>add a new</h2>
       <PersonForm submit={addPerson} valName={newName} valNumber={newNumber} changeName={handleNameChange} changeNumber={handleNumberChange} />
