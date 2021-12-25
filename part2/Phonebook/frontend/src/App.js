@@ -35,7 +35,7 @@ const App = () => {
         const obj = persons.filter(person => person.name === newName)
         const change = {...obj[0], number: newNumber}
         axios
-          .put(`http://localhost:3001/persons/${obj[0]['id']}`, change)
+          .put(`/api/persons/${obj[0]['id']}`, change)
           .then(()=> {
             directry
               .getAll()
@@ -80,6 +80,7 @@ const App = () => {
           directry
           .getAll()
           .then(response => {
+            console.log(response)
             setPersons(response.data)
           })
         })
@@ -112,7 +113,7 @@ const App = () => {
     return (persons.filter(person => (person.name.toLowerCase().indexOf(filteredName.toLowerCase())) > -1)) 
   } 
 
-  
+
   return (  
     <div>
       <h2>Phonebook</h2>
